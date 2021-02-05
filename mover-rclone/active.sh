@@ -28,6 +28,8 @@ destination)
     rclone sync "${RCLONE_FLAGS[@]}" "${RCLONE_CONFIG_SECTION}:${RCLONE_DEST_PATH}" "${MOUNT_PATH}" --log-level DEBUG
     rc=$?
     ;;
+    chown -R "${CHANGEOWNERSHIP}" "${MOUNT_PATH}"
+    chgrp -R "${CHANGEGROUP}" "${MOUNT_PATH}"
 *)
     error 1 "unknown value for DIRECTION: ${DIRECTION}"
     ;;

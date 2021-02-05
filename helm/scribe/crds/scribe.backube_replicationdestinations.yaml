@@ -89,6 +89,14 @@ spec:
                       create.
                     pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                     x-kubernetes-int-or-string: true
+                  changeGroup:
+                    description: sshUser is the username for outgoing SSH connections.
+                      Defaults to "root".
+                    type: string
+                  changeOwnership:
+                    description: sshUser is the username for outgoing SSH connections.
+                      Defaults to "root".
+                    type: string
                   copyMethod:
                     description: copyMethod describes how a point-in-time (PiT) image
                       of the destination volume should be created.

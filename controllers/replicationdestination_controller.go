@@ -558,6 +558,8 @@ func (r *rcloneDestReconciler) ensureJob(l logr.Logger) (bool, error) {
 			{Name: "DIRECTION", Value: "destination"},
 			{Name: "MOUNT_PATH", Value: mountPath},
 			{Name: "RCLONE_CONFIG_SECTION", Value: *r.Instance.Spec.Rclone.RcloneConfigSection},
+			{Name: "CHOWN", Value: *r.Instance.Spec.Rclone.ChangeOwnership},
+			{Name: "CHGRP", Value: *r.Instance.Spec.Rclone.ChangeGroup},
 		}
 		r.job.Spec.Template.Spec.Containers[0].Command = []string{"/bin/bash", "-c", "./active.sh"}
 		r.job.Spec.Template.Spec.Containers[0].Image = RcloneContainerImage

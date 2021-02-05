@@ -113,6 +113,12 @@ type ReplicationDestinationRcloneSpec struct {
 	RcloneDestPath *string `json:"rcloneDestPath,omitempty"`
 	// RcloneConfig is the rclone secret name
 	RcloneConfig *string `json:"rcloneConfig,omitempty"`
+	// sshUser is the username for outgoing SSH connections. Defaults to "root".
+	//+optional
+	ChangeOwnership *string `json:"changeOwnership,omitempty"`
+	// sshUser is the username for outgoing SSH connections. Defaults to "root".
+	//+optional
+	ChangeGroup *string `json:"changeGroup,omitempty"`
 }
 
 // ReplicationDestinationExternalSpec defines the configuration when using an

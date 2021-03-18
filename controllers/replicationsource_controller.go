@@ -21,6 +21,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -33,7 +34,6 @@ import (
 	kerrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/util/intstr"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	ctrlutil "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -538,26 +538,22 @@ func (r *rsyncSrcReconciler) ensureJob(l logr.Logger) (bool, error) {
 			r.job.Spec.Template.Spec.Containers = []corev1.Container{{}}
 		}
 		r.job.Spec.Template.Spec.Containers[0].Name = "rsync"
-		if r.Instance.Spec.Rsync.Address != nil {
-			if r.Instance.Spec.Rsync.Port != nil {
-				connectPort = intstr.FromInt(22)
-			} else {
-				connectPort = intstr.FromInt(*r.Instance.Spec.Rsync.Port)
-				r.job.Spec.Template.Spec.Containers[0].Env = []corev1.EnvVar{
-					{Name: "DESTINATION_ADDRESS", Value: *r.Instance.Spec.Rsync.Address},
-					{Name: "DESTINATION_PORT", Value: connectPort},
-				}
+		if r.Instance.Spec.Rsync.Port != nil {
+			connectPort := strconv.Itoa(int(*r.Instance.Spec.Rsync.Port))
+			r.job.Spec.Template.Spec.Containers[0].Env = []corev1.EnvVar{
+				{Name: "DESTINATION_ADDRESS", Value: *r.Instance.Spec.Rsync.Address},
+				{Name: "DESTINATION_PORT", Value: connectPort},
 			}
-		} else {
-			if r.Instance.Spec.Rsync.Port != nil {
-				connectPort = intstr.FromInt(22)
-			} else {
-				connectPort = intstr.FromInt(*r.Instance.Spec.Rsync.Port)
-				r.job.Spec.Template.Spec.Containers[0].Env = []corev1.EnvVar{
-					{Name: "DESTINATION_ADDRESS", Value: *r.Instance.Spec.Rsync.Address},
-					{Name: "DESTINATION_PORT", Value: connectPort},
-				}
+		} else if r.Instance.Spec.Rsync.Port == nil {
+			defaultSSH := 22
+			connectPort := strconv.Itoa(defaultSSH)
+			r.job.Spec.Template.Spec.Containers[0].Env = []corev1.EnvVar{
+				{Name: "DESTINATION_ADDRESS", Value: *r.Instance.Spec.Rsync.Address},
+				{Name: "DESTINATION_PORT", Value: connectPort},
 			}
+		} else if r.Instance.Spec.Rsync.Address == nil {
+			r.job.Spec.Template.Spec.Containers[0].Env = []corev1.EnvVar{}
+		}
 		r.job.Spec.Template.Spec.Containers[0].Command = []string{"/bin/bash", "-c", "/source.sh"}
 		r.job.Spec.Template.Spec.Containers[0].Image = RsyncContainerImage
 		runAsUser := int64(0)

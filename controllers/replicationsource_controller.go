@@ -545,11 +545,8 @@ func (r *rsyncSrcReconciler) ensureJob(l logr.Logger) (bool, error) {
 				{Name: "DESTINATION_PORT", Value: connectPort},
 			}
 		} else if r.Instance.Spec.Rsync.Port == nil {
-			defaultSSH := 22
-			connectPort := strconv.Itoa(defaultSSH)
 			r.job.Spec.Template.Spec.Containers[0].Env = []corev1.EnvVar{
 				{Name: "DESTINATION_ADDRESS", Value: *r.Instance.Spec.Rsync.Address},
-				{Name: "DESTINATION_PORT", Value: connectPort},
 			}
 		} else if r.Instance.Spec.Rsync.Address == nil {
 			r.job.Spec.Template.Spec.Containers[0].Env = []corev1.EnvVar{}

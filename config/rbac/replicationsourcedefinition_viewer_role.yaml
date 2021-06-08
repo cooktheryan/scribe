@@ -1,0 +1,20 @@
+# permissions for end users to view replicationsourcedefinitions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: replicationsourcedefinition-viewer-role
+rules:
+- apiGroups:
+  - scribe.backube
+  resources:
+  - replicationsourcedefinitions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - scribe.backube
+  resources:
+  - replicationsourcedefinitions/status
+  verbs:
+  - get

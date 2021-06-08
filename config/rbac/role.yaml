@@ -125,6 +125,38 @@ rules:
 - apiGroups:
   - scribe.backube
   resources:
+  - replicationsourcedefinitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - scribe.backube
+  resources:
+  - replicationsourcedefinitions/finalizers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - scribe.backube
+  resources:
+  - replicationsourcedefinitions/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - scribe.backube
+  resources:
   - replicationsources
   verbs:
   - create

@@ -12,7 +12,6 @@ linters:
     - asciicheck
     - deadcode
     - dupl
-    - errcheck
     - errorlint
     - exhaustive
     - exportloopref
